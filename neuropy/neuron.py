@@ -8,28 +8,11 @@ class Environ(object):
   gKS, Iext are the parameters that matter
   """
 
-  def __init__(self, gK = 9.0 , gCa=4.4, gL = 2.0, gKS=0.19, EK=-80., ECa=120., EL=-60., VCa=-1.2, kCa=2./18., VK=2., kK=2./10., kc=0.7, Vc=-25., C=2.4, Iext=37., de=0.052, ep=2.5):
-    self.gK = gK
-    self.gCa = gCa
-    self.gL = gL
-    self.gKS = gKS
-    self.EK = EK
-    self.ECa = ECa
-    self.EL = EL
-    self.VCa = VCa
-    self.VK = VK
-    self.kCa = kCa
-    self.kK = kK
-    self.kc = kc
-    self.Vc = Vc
-    self.C = C
-    self.Iext = Iext
-    self.ep = ep
-    self.de = de
-    self.V1 = VCa
-    self.V2 = 2./kCa
-    self.V3 = VK
-    self.V4 = 2/kK
+  def __init__(self):
+    
+    initvars={"gK":9.0 , "gCa":4.4, "gL":2.0, "gKS":0.19, "EK":-80., "ECa":120., "EL":-60., "VCa":-1.2, 
+          "kCa":2./18., "VK":2., "kK":2./10., "kc":0.7, "Vc":-25., "C":2.4, "Iext":37., "de":0.052, "ep":2.5}
+    vars(self).update(initvars)
     #note: kK = 2/V4 as in the MATLAB code, VCa = V1, kCa = 2/V2, V3 = VK, Vc kc = 2*kc equal
 
 class Model(object):
@@ -93,7 +76,7 @@ class Neuron(object):
     self.model = model
 
   def dyn(self,t,x):
-    
+
     xd = self.model.dyn(t,x)
     return xd
   
