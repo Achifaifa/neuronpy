@@ -2,9 +2,11 @@ import numpy as np
 from math import tanh,cosh
 from scipy.integrate import ode
 
-"""Environ holds all the 'global' variables such as C, gK, gCa, etc.
-gKS, Iext are the parameters that matter"""
 class Environ(object):
+    """
+    Environ holds all the 'global' variables such as C, gK, gCa, etc.
+    gKS, Iext are the parameters that matter
+    """
 
     def __init__(self, gK = 9.0 , gCa=4.4, gL = 2.0, gKS=0.19, EK=-80., ECa=120., EL=-60., VCa=-1.2, kCa=2./18., VK=2., kK=2./10., kc=0.7, Vc=-25., C=2.4, Iext=37., de=0.052, ep=2.5):
         self.gK = gK
@@ -29,18 +31,22 @@ class Environ(object):
         self.V3 = VK
         self.V4 = 2/kK
         #note: kK = 2/V4 as in the MATLAB code, VCa = V1, kCa = 2/V2, V3 = VK, Vc kc = 2*kc equal
-"""Model represents the model in Ghiglia, Holmes paper:
-Cv' = - [ICa + IK + IL + IKS] + Iext
-m' = ep/tm(v)*(mInf(v)-m)
-c' = del/tc(v)*(cInf(v)-c)
 
-ICa = gCa*nInf(v)(v-ECa)
-IL = gL*(v-EK)
-IK = gK*m*(v-EK)
-IKS = gKS*c*(v-EK)
-wInf(v) = 1/(1+exp(-kw(v-vwth))) = 0.5*(1+tanh(-kw(v-vwth)/2)) (w = m,c,n)
-tw(v) = sech(kw(v-vwth)) (w = m,c,n)"""
 class Model(object):
+    """
+    Model represents the model in Ghiglia, Holmes paper:
+    Cv' = - [ICa + IK + IL + IKS] + Iext
+    m' = ep/tm(v)*(mInf(v)-m)
+    c' = del/tc(v)*(cInf(v)-c)
+
+    ICa = gCa*nInf(v)(v-ECa)
+    IL = gL*(v-EK)
+    IK = gK*m*(v-EK)
+    IKS = gKS*c*(v-EK)
+    wInf(v) = 1/(1+exp(-kw(v-vwth))) = 0.5*(1+tanh(-kw(v-vwth)/2)) (w = m,c,n)
+    tw(v) = sech(kw(v-vwth)) (w = m,c,n)
+    """
+
     def __init__(self,env):
         self.env = env
 
@@ -77,10 +83,10 @@ class Model(object):
         
         return np.array([Vd, md, cd])
 
-
-"""Neuron is an object that contains the model for V, w and c"""
-
 class Neuron(object):
+    """
+    Neuron is an object that contains the model for V, w and c
+    """
     
     def __init__(self,env,model):
         self.env = env
@@ -100,7 +106,7 @@ class Neuron(object):
             r.integrate(r.t + dt)
             t.append(r.t)
             xd.append(r.y)
-#            print("%g %g %g %g" %(r.t, r.y[0],r.y[1],r.y[2]))
+            # print("%g %g %g %g" %(r.t, r.y[0],r.y[1],r.y[2]))
 
         print(r.successful())
         return [t, xd]
