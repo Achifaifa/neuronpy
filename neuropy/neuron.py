@@ -13,6 +13,10 @@ class Environ(object):
     initvars={"gK":9.0 , "gCa":4.4, "gL":2.0, "gKS":0.19, "EK":-80., "ECa":120., "EL":-60., "VCa":-1.2, 
           "kCa":2./18., "VK":2., "kK":2./10., "kc":0.7, "Vc":-25., "C":2.4, "Iext":37., "de":0.052, "ep":2.5}
     vars(self).update(initvars)
+    self.V1=self.VCa
+    self.V2=2./self.kCa
+    self.V3=self.VK
+    self.V4=2/kK #lowercase k, uppercase K
     #note: kK = 2/V4 as in the MATLAB code, VCa = V1, kCa = 2/V2, V3 = VK, Vc kc = 2*kc equal
 
 class Model(object):
@@ -31,24 +35,31 @@ class Model(object):
   """
 
   def __init__(self,env):
+    
     self.env = env
 
   def nInf(self,V):
+
     return 0.5*(1+np.tanh((V-self.env.VCa)*self.env.kCa/2))
 
   def mInf(self,V):
+
     return 0.5*(1+np.tanh((V-self.env.VK)*self.env.kK))
 
   def tm(self,V):
+
     return 1./np.cosh((V-self.env.VK)*self.env.kK/4)
 
   def cInf(self,V):
+
     return 0.5*(1+np.tanh(self.env.kc/2*(V-self.env.Vc)))
 
   def tc(self,V):
+
     return 1./np.cosh((V-self.env.Vc)*self.env.kK/4)
   
   def dyn(self,t,x):
+
     [V, m, c] = x
     mInf = 0.5*(1+tanh((V-self.env.V3)/self.env.V4))
     cInf = 0.5*(1+tanh((V-self.env.Vc)*self.env.kc))
